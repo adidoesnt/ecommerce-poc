@@ -1,2 +1,2 @@
-export { default as User } from 'models/user';
-export { default as Session } from 'models/session';
+export { User } from 'models/user';
+export { Session } from 'models/session';

@@ -10,6 +10,7 @@
     "dev": "bun --watch run src/index.ts"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/bun": "latest",
     "@types/helmet": "^4.0.0"
   },
@@ -17,6 +18,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "chalk": "^5.3.0",
     "helmet": "^7.1.0"
   }

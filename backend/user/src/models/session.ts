@@ -9,8 +9,10 @@ export class Session {
 
     @prop({ required: true })
     public expires!: Date;
+
+    public static async create(session: Session) {
+        return await SessionModel.create(session);
+    }
 }
 
 const SessionModel = getModelForClass(Session);
-
-export default SessionModel;
