@@ -1,7 +1,7 @@
 import express from 'express';
 import { healthRouter } from 'routes';
 import { setupBodyParser, setupCors, setupHelmet } from 'middleware';
-import { Logger } from 'utils';
+import { database, Logger } from 'utils';
 
 const { PORT = 3001 } = process.env;
 
@@ -17,6 +17,7 @@ setupHelmet(app);
 
 app.use(healthRouter);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await database.connect();
     logger.info(`🚀 User service listening on port ${PORT}`);
 });

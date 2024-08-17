@@ -25,5 +25,10 @@
         "frameguard": {
             "action": "deny"
         }
+    },
+    "mongoose": {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true,
+        "useCreateIndex": true
     }
 }
