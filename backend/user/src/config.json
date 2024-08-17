@@ -39,6 +39,10 @@
         }
     },
     "contextPath": {
-        "user": "/user"
+        "user": {
+            "root": "/user",
+            "login": "/login",
+            "logout": "/logout"
+        }
     }
 }

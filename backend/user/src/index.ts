@@ -26,7 +26,7 @@ setupSession(app);
 setupPassport(app);
 
 app.use(healthRouter);
-app.use(contextPath.user, userRouter);
+app.use(contextPath.user.root, userRouter);
 
 app.use(errorHandler);
 

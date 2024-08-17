@@ -4,6 +4,8 @@ import { Logger } from 'utils';
 import { userService } from 'services';
 import type { Express } from 'express';
 import type { User } from 'models';
+import type { Request, Response, NextFunction } from 'express';
+import { RES } from 'controllers/types';
 
 const logger = new Logger({
     module: 'middleware/passport',
@@ -13,6 +15,18 @@ enum ErrorMessage {
     USER_NOT_FOUND = 'User not found',
     INCORRECT_PASSWORD = 'Incorrect password',
 }
+
+export const isAuthenticated = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    const { status, message } = RES.UNAUTHORIZED;
+    return res.status(status).json({ message });
+};
 
 export const setupPassport = (app: Express) => {
     logger.info('Setting up passport middleware');
@@ -28,13 +42,15 @@ export const setupPassport = (app: Express) => {
         const user = await userService.findUserById(id);
         done(null, user);
     });
+
+    setupLocalAuthStrategy();
 };
 
 export const setupLocalAuthStrategy = () => {
-    logger.info('Setting up passport middleware');
+    logger.info('Setting up local auth strategy');
     passport.use(
         new LocalStrategy(
-            { usernameField: 'email' },
+            { usernameField: 'email', passwordField: 'password' },
             async (email, password, done) => {
                 try {
                     const user = await userService.findUserByEmail(email);

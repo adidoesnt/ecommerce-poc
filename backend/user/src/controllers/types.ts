@@ -28,6 +28,14 @@ export const RES = {
         status: 400,
         message: 'Bad request',
     },
+    UNAUTHORIZED: {
+        status: 401,
+        message: 'Unauthorized',
+    },
+    FORBIDDEN: {
+        status: 403,
+        message: 'Forbidden',
+    },
     CONFLICT: {
         status: 409,
         message: 'Conflict',
