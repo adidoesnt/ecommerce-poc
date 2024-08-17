@@ -6,7 +6,7 @@ const logger = new Logger({
     module: 'controllers/user',
 });
 
-export const addUser = async ({ request, response, next }: ControllerProps) => {
+export const signup = async ({ request, response, next }: ControllerProps) => {
     try {
         logger.info('Calling addUser controller');
         const { body } = request;

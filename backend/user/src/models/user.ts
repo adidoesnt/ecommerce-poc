@@ -2,9 +2,7 @@ import {
     prop,
     getModelForClass,
     index,
-    type ReturnModelType,
 } from '@typegoose/typegoose';
-import type { BeAnObject } from '@typegoose/typegoose/lib/types';
 import type { ObjectId } from 'mongoose';
 
 @index({ areaCode: 1, phone: 1 }, { unique: true })

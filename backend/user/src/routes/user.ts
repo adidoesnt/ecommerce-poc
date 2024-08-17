@@ -10,7 +10,7 @@ const router = Router();
 
 router.post('/', async (request, response, next) => {
     logger.info('POST /user');
-    return await userController.addUser({ request, response, next });
+    return await userController.signup({ request, response, next });
 });
 
 export default router;
