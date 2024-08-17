@@ -2,6 +2,7 @@ import type { Request } from "express";
 import { Logger } from "utils";
 import { hash } from "bcrypt";
 import { User } from "models";
+import { userRepository } from "repositories";
 
 const { SALT_ROUNDS = 10 } = process.env;
 
@@ -17,14 +18,15 @@ export const addUser = async (body: Request['body']) => {
             ...rest,
             password: censoredPassword,
         });
-        const hashedPassword = hash(password, SALT_ROUNDS);
+        const hashedPassword = await hash(password, SALT_ROUNDS);
         const newUser = {
             ...rest,
             password: hashedPassword,
         } as User;
-        await User.create(newUser);
+        await userRepository.createOne(newUser);
         logger.info('Added user with data:', newUser);
     } catch (error) {
         logger.error('Error adding user:', error as Error);
+        throw error;
     }
 }

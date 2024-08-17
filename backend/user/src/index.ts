@@ -1,5 +1,5 @@
 import express from 'express';
-import { healthRouter } from 'routes';
+import { healthRouter, userRouter } from 'routes';
 import { setupBodyParser, setupCors, setupHelmet } from 'middleware';
 import { database, Logger } from 'utils';
 
@@ -16,6 +16,7 @@ setupBodyParser(app);
 setupHelmet(app);
 
 app.use(healthRouter);
+app.use('/user', userRouter);
 
 app.listen(PORT, async () => {
     await database.connect();

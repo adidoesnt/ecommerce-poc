@@ -1,31 +1,36 @@
-import { prop, getModelForClass, index } from '@typegoose/typegoose';
+import {
+    prop,
+    getModelForClass,
+    index,
+    type ReturnModelType,
+} from '@typegoose/typegoose';
+import type { BeAnObject } from '@typegoose/typegoose/lib/types';
+import type { ObjectId } from 'mongoose';
 
 @index({ areaCode: 1, phone: 1 }, { unique: true })
 export class User {
-    @prop({ required: true })
+    public _id!: ObjectId;
+
+    @prop({ required: true, type: String })
     public firstName!: string;
 
-    @prop()
+    @prop({ type: String })
     public middleName?: string;
 
-    @prop({ required: true })
+    @prop({ required: true, type: String })
     public lastName!: string;
 
-    @prop({ required: true, unique: true })
+    @prop({ required: true, unique: true, type: String })
     public email!: string;
 
-    @prop({ required: true })
+    @prop({ required: true, type: Number })
     public areaCode!: number;
 
-    @prop({ required: true })
+    @prop({ required: true, type: Number })
     public phone!: number;
 
-    @prop({ required: true })
+    @prop({ required: true, type: String })
     public password!: string;
-
-    public static async create(user: User) {
-        return await UserModel.create(user);
-    }
 }
 
-const UserModel = getModelForClass(User);
+export const UserModel = getModelForClass(User);
