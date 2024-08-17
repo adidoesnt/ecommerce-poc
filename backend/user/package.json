@@ -1,0 +1,18 @@
+{
+  "name": "user",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write src/**/*.ts",
+    "build": "docker build -t user .",
+    "start:docker": "docker run -p 3001:3001 user",
+    "start": "bun run src/index.ts",
+    "dev": "bun --watch run src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
