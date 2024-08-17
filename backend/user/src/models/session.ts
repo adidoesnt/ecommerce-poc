@@ -1,5 +1,5 @@
 import { prop, getModelForClass } from '@typegoose/typegoose';
-import type { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 export class Session {
     public _id!: ObjectId;

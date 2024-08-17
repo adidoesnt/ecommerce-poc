@@ -13,3 +13,14 @@ export const createOne = async (user: User) => {
         throw error;
     }
 };
+
+export const findOne = async (
+    options: Partial<User>,
+) => {
+    try {
+        return await UserModel.findOne(options);
+    } catch (error) {
+        logger.error('Error finding user:', error as Error);
+        throw error;
+    }
+};

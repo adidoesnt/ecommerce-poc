@@ -1,9 +1,9 @@
 import type { Request } from 'express';
 import { Logger } from 'utils';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { User } from 'models';
 import { userRepository } from 'repositories';
-import type { MongoError } from 'mongodb';
+import { ObjectId, type MongoError } from 'mongodb';
 import { ControllerError, RES } from 'controllers/types';
 import { ErrorCode } from './types';
 
@@ -63,7 +63,44 @@ export const addUser = async (body: Request['body']) => {
     }
 };
 
-export const throwControllerError = (code: ErrorCode) => {
+export const findUserById = async (id: string) => {
+    try {
+        const _id = new ObjectId(id);
+        return await userRepository.findOne({ _id });
+    } catch (e) {
+        const error = e as MongoError;
+        const { code } = error;
+        logger.error('Error finding user by id:', error as Error);
+        console.log(error);
+        throwControllerError(code as ErrorCode);
+    }
+};
+
+export const findUserByEmail = async (email: string) => {
+    try {
+        return await userRepository.findOne({
+            email,
+        });
+    } catch (e) {
+        const error = e as MongoError;
+        const { code } = error;
+        logger.error('Error finding user by email:', error as Error);
+        console.log(error);
+        throwControllerError(code as ErrorCode);
+    }
+};
+
+export const checkPassword = async (password: string, user: User) => {
+    try {
+        const isPasswordValid = await compare(password, user.password);
+        return isPasswordValid;
+    } catch (error) {
+        logger.error('Error checking password:', error as Error);
+        throwControllerError();
+    }
+};
+
+export const throwControllerError = (code?: ErrorCode) => {
     switch (code) {
         case ErrorCode.DUPLICATE_KEY:
             throw new ControllerError(ErrorMessage.USER_ALREADY_EXISTS, {

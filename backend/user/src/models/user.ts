@@ -3,7 +3,7 @@ import {
     getModelForClass,
     index,
 } from '@typegoose/typegoose';
-import type { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 @index({ areaCode: 1, phone: 1 }, { unique: true })
 export class User {

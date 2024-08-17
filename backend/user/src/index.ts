@@ -1,6 +1,14 @@
+import { contextPath } from 'config.json';
 import express from 'express';
 import { healthRouter, userRouter } from 'routes';
-import { errorHandler, setupBodyParser, setupCors, setupHelmet } from 'middleware';
+import {
+    errorHandler,
+    setupBodyParser,
+    setupCors,
+    setupHelmet,
+    setupSession,
+    setupPassport,
+} from 'middleware';
 import { database, Logger } from 'utils';
 
 const { PORT = 3001 } = process.env;
@@ -14,9 +22,11 @@ const app = express();
 setupCors(app);
 setupBodyParser(app);
 setupHelmet(app);
+setupSession(app);
+setupPassport(app);
 
 app.use(healthRouter);
-app.use('/user', userRouter);
+app.use(contextPath.user, userRouter);
 
 app.use(errorHandler);
 
