@@ -6,7 +6,14 @@ export type ControllerProps = {
     next: NextFunction;
 };
 
-export type CustomError = Error & { status: number };
+export class ControllerError extends Error {
+    status: number;
+    
+    constructor(message: string, options: { status: number }) {
+        super(message);
+        this.status = options.status;
+    }
+}
 
 export const RES = {
     OK: {
@@ -16,6 +23,14 @@ export const RES = {
     CREATED: {
         status: 201,
         message: 'Created',
+    },
+    BAD_REQUEST: {
+        status: 400,
+        message: 'Bad request',
+    },
+    CONFLICT: {
+        status: 409,
+        message: 'Conflict',
     },
     INTERNAL_SERVER_ERROR: {
         status: 500,
