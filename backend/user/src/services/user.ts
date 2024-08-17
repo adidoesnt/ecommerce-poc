@@ -1,8 +1,8 @@
-import type { Request } from "express";
-import { Logger } from "utils";
-import { hash } from "bcrypt";
-import { User } from "models";
-import { userRepository } from "repositories";
+import type { Request } from 'express';
+import { Logger } from 'utils';
+import { hash } from 'bcrypt';
+import { User } from 'models';
+import { userRepository } from 'repositories';
 
 const { SALT_ROUNDS = 10 } = process.env;
 
@@ -29,4 +29,4 @@ export const addUser = async (body: Request['body']) => {
         logger.error('Error adding user:', error as Error);
         throw error;
     }
-}
+};

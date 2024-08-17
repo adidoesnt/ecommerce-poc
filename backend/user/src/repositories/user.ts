@@ -1,5 +1,5 @@
-import { User, UserModel } from "models";
-import { Logger } from "utils";
+import { User, UserModel } from 'models';
+import { Logger } from 'utils';
 
 const logger = new Logger({
     module: 'repositories/user',
