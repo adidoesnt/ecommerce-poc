@@ -1,12 +1,12 @@
-import chalk, { type ChalkInstance } from "chalk";
-import { join } from "path";
-import { writeFileSync, mkdirSync } from "fs";
+import chalk, { type ChalkInstance } from 'chalk';
+import { join } from 'path';
+import { writeFileSync, mkdirSync } from 'fs';
 
 enum Level {
-    INFO = "INFO",
-    WARN = "WARN",
-    ERROR = "ERROR",
-    DEBUG = "DEBUG",
+    INFO = 'INFO',
+    WARN = 'WARN',
+    ERROR = 'ERROR',
+    DEBUG = 'DEBUG',
 }
 
 const LevelMap: Record<Level, ChalkInstance> = {
@@ -35,9 +35,9 @@ export class Logger {
     ) {
         if (config.useSingleLogFile && !config.onlyConsole) {
             const fileName = config.fileNames as string;
-            if (typeof fileName !== "string") {
+            if (typeof fileName !== 'string') {
                 throw new Error(
-                    "fileName should be a string when useSingleLogFile is true",
+                    'fileName should be a string when useSingleLogFile is true',
                 );
             }
             config.fileNames = {
@@ -52,21 +52,21 @@ export class Logger {
 
     getMessage(level: Level, message: string, additional?: object): string {
         const now = new Date().toLocaleString();
-        const { module = "default" } = this.config;
+        const { module = 'default' } = this.config;
         const preamble = `[${now}] [${module}] [${level}]`;
         !this.config.onlyConsole && this.writeMessage(level, preamble);
         const formattedPreamble = LevelMap[level](preamble);
-        const formattedMessage = `${formattedPreamble} ${message} ${additional ? JSON.stringify(additional) : ""}`;
+        const formattedMessage = `${formattedPreamble} ${message} ${additional ? JSON.stringify(additional) : ''}`;
         return formattedMessage;
     }
 
     writeMessage(level: Level, formattedMessage: string): void {
         const fileName = (this.config.fileNames as FileNames)?.[level];
         if (fileName) {
-            const dirPath = join(__dirname, "..", "..", "logs");
+            const dirPath = join(__dirname, '..', '..', 'logs');
             mkdirSync(dirPath, { recursive: true });
             const filePath = join(dirPath, fileName);
-            writeFileSync(filePath, `${formattedMessage}\n`, { flag: "a" });
+            writeFileSync(filePath, `${formattedMessage}\n`, { flag: 'a' });
         }
     }
 

@@ -11,4 +11,4 @@ export const RES = {
         status: 200,
         message: 'OK',
     },
-}
+};
