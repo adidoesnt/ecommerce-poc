@@ -1,16 +1,16 @@
 import express from 'express';
-import cors from 'cors';
-import { json, urlencoded } from 'body-parser';
 import { healthRouter } from 'routes';
+import { setupBodyParser, setupCors, setupHelmet } from 'middleware';
 
 const { PORT = 3001 } = process.env;
 
 const app = express();
-app.use(healthRouter);
 
-app.use(cors());
-app.use(json());
-app.use(urlencoded({ extended: true }));
+setupCors(app);
+setupBodyParser(app);
+setupHelmet(app);
+
+app.use(healthRouter);
 
 app.listen(PORT, () => {
     console.log(`🚀 User service listening on port ${PORT}`);
