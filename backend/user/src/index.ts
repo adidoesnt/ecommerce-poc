@@ -1,6 +1,6 @@
 import express from 'express';
 import { healthRouter, userRouter } from 'routes';
-import { setupBodyParser, setupCors, setupHelmet } from 'middleware';
+import { errorHandler, setupBodyParser, setupCors, setupHelmet } from 'middleware';
 import { database, Logger } from 'utils';
 
 const { PORT = 3001 } = process.env;
@@ -17,6 +17,8 @@ setupHelmet(app);
 
 app.use(healthRouter);
 app.use('/user', userRouter);
+
+app.use(errorHandler);
 
 app.listen(PORT, async () => {
     await database.connect();

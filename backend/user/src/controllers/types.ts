@@ -6,6 +6,8 @@ export type ControllerProps = {
     next: NextFunction;
 };
 
+export type CustomError = Error & { status: number };
+
 export const RES = {
     OK: {
         status: 200,
@@ -14,5 +16,9 @@ export const RES = {
     CREATED: {
         status: 201,
         message: 'Created',
-    }
+    },
+    INTERNAL_SERVER_ERROR: {
+        status: 500,
+        message: 'Internal server error',
+    },
 };
