@@ -28,3 +28,5 @@ export class User {
 }
 
 export const UserModel = getModelForClass(User);
+
+export type UserCreateAttributes = Omit<User, '_id'>;

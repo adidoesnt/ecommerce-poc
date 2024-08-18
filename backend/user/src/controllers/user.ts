@@ -1,5 +1,5 @@
 import { contextPath } from 'config.json';
-import { userService } from 'services';
+import { sessionService, userService } from 'services';
 import { RES, type ControllerProps } from './types';
 import { Logger, tokenUtils } from 'utils';
 import passport from 'passport';
@@ -40,6 +40,10 @@ export const loginSuccess = async ({
         const { status, message } = RES.OK;
         const { user } = request as RequestWithUser;
         const token = await tokenUtils.generateToken(user as User);
+        await sessionService.setupSession({
+            userId: (user as User)._id,
+            token,
+        });
         return response.status(status).json({ message, token });
     } catch (error) {
         next(error);

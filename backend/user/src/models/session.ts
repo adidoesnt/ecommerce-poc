@@ -4,14 +4,16 @@ import { ObjectId } from 'mongodb';
 export class Session {
     public _id!: ObjectId;
 
-    @prop({ required: true, type: String })
-    public userId!: string;
+    @prop({ required: true, type: ObjectId })
+    public userId!: ObjectId;
 
     @prop({ required: true, type: String, unique: true })
     public token!: string;
 
-    @prop({ required: true, type: Date })
-    public expires!: Date;
+    @prop({ required: false, type: Boolean, default: false })
+    public expired?: boolean;
 }
 
 export const SessionModel = getModelForClass(Session);
+
+export type SessionCreateAttributes = Omit<Session, '_id'>;

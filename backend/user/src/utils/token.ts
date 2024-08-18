@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import type { User } from 'models';
 import { Logger } from 'utils';
 
-const { JWT_SECRET = 'dummy-secret', JWT_EXPIRY } = process.env;
+const { JWT_SECRET = 'dummy-secret', JWT_EXPIRY = 3600 } = process.env;
 
 const logger = new Logger({
     module: 'utils/token',
