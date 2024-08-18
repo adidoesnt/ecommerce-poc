@@ -1,7 +1,7 @@
 import { contextPath } from 'config.json';
 import { sessionService, userService } from 'services';
 import { RES, type ControllerProps } from './types';
-import { Logger, tokenUtils } from 'utils';
+import { authUtils, Logger, tokenUtils } from 'utils';
 import passport from 'passport';
 import type { RequestWithUser } from 'middleware/types';
 import type { User } from 'models';
@@ -58,17 +58,23 @@ export const loginFailure = async ({ response }: ControllerProps) => {
 
 export const logout = async ({ request, response }: ControllerProps) => {
     logger.info('Calling logout controller');
+    const { status, message } = RES.INTERNAL_SERVER_ERROR;
     if (!request.logout) {
-        const { status, message } = RES.INTERNAL_SERVER_ERROR;
         return response.status(status).json({ message });
     }
-    request.logout((err) => {
+    request.logout(async (err) => {
         if (err) {
-            const { status, message } = RES.INTERNAL_SERVER_ERROR;
             logger.error('Error logging out:', err);
             return response.status(status).json({ message });
         }
-        return response.redirect(`.${logoutContextPath}/success`);
+        try {
+            const token = authUtils.getTokenFromRequest(request);
+            await sessionService.expireSessionByToken(token);
+            return response.redirect(`.${logoutContextPath}/success`);
+        } catch (error) {
+            logger.error('Error logging out:', error as Error);
+            return response.status(status).json({ message });
+        }
     });
 };
 

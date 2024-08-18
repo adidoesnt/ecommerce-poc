@@ -59,11 +59,11 @@ export const deleteSessionById = async (id: string | ObjectId) => {
     }
 };
 
-export const expireSessionById = async (id: string | ObjectId) => {
+export const expireSessionByToken = async (token: string) => {
     try {
-        let _id: ObjectId = typeof id === 'string' ? new ObjectId(id) : id;
+        logger.info('Expiring session with token:', { token });
         return await sessionRepository.updateOne({
-            _id,
+            token,
             expired: true,
         });
     } catch (error) {
