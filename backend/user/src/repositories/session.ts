@@ -24,10 +24,12 @@ export const deleteOne = async (session: Partial<Session>) => {
     }
 };
 
-export const updateOne = async (session: Partial<Session>) => {
+export const updateOne = async (
+    query: Partial<Session>,
+    updates: Partial<Session>,
+) => {
     try {
-        const { _id, ...updates } = session;
-        return await SessionModel.updateOne({ _id }, updates);
+        return await SessionModel.updateOne(query, updates);
     } catch (error) {
         logger.error('Error updating session:', error as Error);
         throw error;
