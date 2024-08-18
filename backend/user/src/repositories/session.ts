@@ -26,8 +26,8 @@ export const deleteOne = async (session: Partial<Session>) => {
 
 export const updateOne = async (session: Partial<Session>) => {
     try {
-        // TODO: fix duplicate key error
-        return await SessionModel.updateOne(session);
+        const { _id, ...updates } = session;
+        return await SessionModel.updateOne({ _id }, updates);
     } catch (error) {
         logger.error('Error updating session:', error as Error);
         throw error;
