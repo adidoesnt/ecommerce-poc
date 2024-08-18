@@ -29,7 +29,7 @@ router.post(`${loginContextPath}/failure`, (request, response, next) => {
     return userController.loginFailure({ request, response, next });
 });
 
-router.post(logoutContextPath, (request, response, next) => {
+router.post(logoutContextPath, isAuthenticated, (request, response, next) => {
     logger.info(`POST ${logoutContextPath}`);
     return userController.logout({ request, response, next });
 });

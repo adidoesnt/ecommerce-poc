@@ -1,8 +1,10 @@
 import { contextPath } from 'config.json';
 import { userService } from 'services';
 import { RES, type ControllerProps } from './types';
-import { Logger } from 'utils';
+import { Logger, tokenUtils } from 'utils';
 import passport from 'passport';
+import type { RequestWithUser } from 'middleware/types';
+import type { User } from 'models';
 
 const { login: loginContextPath, logout: logoutContextPath } = contextPath.user;
 
@@ -28,10 +30,20 @@ export const login = passport.authenticate('local', {
     failureFlash: true,
 });
 
-export const loginSuccess = async ({ response }: ControllerProps) => {
+export const loginSuccess = async ({
+    request,
+    response,
+    next,
+}: ControllerProps) => {
     logger.info('Calling loginSuccess controller');
-    const { status, message } = RES.OK;
-    return response.status(status).json({ message });
+    try {
+        const { status, message } = RES.OK;
+        const { user } = request as RequestWithUser;
+        const token = await tokenUtils.generateToken(user as User);
+        return response.status(status).json({ message, token });
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const loginFailure = async ({ response }: ControllerProps) => {
