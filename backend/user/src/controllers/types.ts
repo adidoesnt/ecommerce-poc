@@ -8,7 +8,7 @@ export type ControllerProps = {
 
 export class ControllerError extends Error {
     status: number;
-    
+
     constructor(message: string, options: { status: number }) {
         super(message);
         this.status = options.status;

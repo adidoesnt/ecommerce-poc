@@ -14,9 +14,7 @@ export const createOne = async (user: User) => {
     }
 };
 
-export const findOne = async (
-    options: Partial<User>,
-) => {
+export const findOne = async (options: Partial<User>) => {
     try {
         return await UserModel.findOne(options);
     } catch (error) {

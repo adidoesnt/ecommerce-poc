@@ -45,9 +45,7 @@ export const addUser = async (body: Request['body']) => {
             ...rest,
             password: censoredPassword,
         });
-        const hashedPassword = password
-            ? hash(password, SALT_ROUNDS)
-            : null;
+        const hashedPassword = password ? hash(password, SALT_ROUNDS) : null;
         const newUser = {
             ...rest,
             password: hashedPassword,

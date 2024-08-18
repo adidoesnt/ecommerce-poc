@@ -1,8 +1,4 @@
-import {
-    prop,
-    getModelForClass,
-    index,
-} from '@typegoose/typegoose';
+import { prop, getModelForClass, index } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
 
 @index({ areaCode: 1, phone: 1 }, { unique: true })
