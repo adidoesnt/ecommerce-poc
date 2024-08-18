@@ -1,6 +1,6 @@
 import type { Request } from 'express';
 import { Logger } from 'utils';
-import { hash, compare } from 'bcrypt';
+import { hash, compare } from 'bcryptjs';
 import { User } from 'models';
 import { userRepository } from 'repositories';
 import { ObjectId, type MongoError } from 'mongodb';
@@ -46,7 +46,7 @@ export const addUser = async (body: Request['body']) => {
             password: censoredPassword,
         });
         const hashedPassword = password
-            ? await hash(password, SALT_ROUNDS)
+            ? hash(password, SALT_ROUNDS)
             : null;
         const newUser = {
             ...rest,
