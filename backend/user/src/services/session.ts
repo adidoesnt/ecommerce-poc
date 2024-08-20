@@ -62,9 +62,12 @@ export const deleteSessionById = async (id: string | ObjectId) => {
 export const expireSessionByToken = async (token: string) => {
     try {
         logger.info('Expiring session with token:', { token });
-        return await sessionRepository.updateOne({ token }, {
-            expired: true,
-        });
+        return await sessionRepository.updateOne(
+            { token },
+            {
+                expired: true,
+            },
+        );
     } catch (error) {
         console.log(error);
         throw error;

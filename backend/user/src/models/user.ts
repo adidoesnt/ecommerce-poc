@@ -20,7 +20,7 @@ export class User {
     @prop({ required: false, type: Number })
     public areaCode?: number;
 
-    @prop({ required: false,type: Number })
+    @prop({ required: false, type: Number })
     public phone?: number;
 
     @prop({ required: true, type: String })

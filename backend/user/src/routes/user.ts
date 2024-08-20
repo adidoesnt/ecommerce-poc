@@ -6,8 +6,7 @@ import { isAuthenticated } from 'middleware/passport';
 import { Logger } from 'utils';
 
 const { login: loginContextPath, logout: logoutContextPath } = contextPath.user;
-const { callback: googleCallbackPath, root: googleRootPath } =
-    contextPath.google;
+const { root: googleRootPath } = contextPath.google;
 
 const logger = new Logger({
     module: 'routes/user',
@@ -62,7 +61,7 @@ router.post(`${logoutContextPath}/success`, (request, response, next) => {
 
 // Google Login
 router.get(googleRootPath, (request, response, next) => {
-    logger.info(`GET ${googleCallbackPath}`);
+    logger.info(`GET ${googleRootPath}`);
     return userController.googleLogin({ request, response, next });
 });
 
