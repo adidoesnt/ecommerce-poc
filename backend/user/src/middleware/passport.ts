@@ -14,8 +14,7 @@ const {
     GOOGLE_CLIENT_ID = 'dummy-client-id',
     GOOGLE_CLIENT_SECRET = 'dummy-client-secret',
 } = process.env;
-const { callback: googleCallbackPath } = contextPath.google;
-const { root: userContextPath } = contextPath.user;
+const { root: userContextPath, login: loginContextPath } = contextPath.user;
 
 const logger = new Logger({
     module: 'middleware/passport',
@@ -97,7 +96,7 @@ export const setupGoogleAuthStrategy = () => {
             {
                 clientID: GOOGLE_CLIENT_ID,
                 clientSecret: GOOGLE_CLIENT_SECRET,
-                callbackURL: `${BASE_URL}${userContextPath}${googleCallbackPath}`,
+                callbackURL: `${BASE_URL}${userContextPath}${loginContextPath}/success`,
             },
             async (_accessToken, _refreshToken, profile, done) => {
                 try {

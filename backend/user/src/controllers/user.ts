@@ -32,11 +32,11 @@ export const login = passport.authenticate('local', {
 
 export const googleLogin = ({ request, response, next }: ControllerProps) => {
     logger.info('Calling googleLogin controller');
-    return passport.authenticate('google', { scope: ['profile', 'email'] })(
-        request,
-        response,
-        next,
-    );
+    return passport.authenticate('google', {
+        scope: ['profile', 'email'],
+        successRedirect: `.${loginContextPath}/success`,
+        failureRedirect: `.${loginContextPath}/failure`,
+    })(request, response, next);
 };
 
 export const loginSuccess = async ({

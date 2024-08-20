@@ -1,5 +1,6 @@
 import { contextPath } from 'config.json';
 import { userController } from 'controllers';
+import type { ControllerProps } from 'controllers/types';
 import { Router } from 'express';
 import { isAuthenticated } from 'middleware/passport';
 import { Logger } from 'utils';
@@ -21,16 +22,33 @@ router.post('/', async (request, response, next) => {
 
 router.post(loginContextPath, userController.login);
 
-router.post(`${loginContextPath}/success`, (request, response, next) => {
+const handleLoginSuccess = (
+    request: ControllerProps['request'],
+    response: ControllerProps['response'],
+    next: ControllerProps['next'],
+) => {
     logger.info(`POST ${loginContextPath}/success`);
     return userController.loginSuccess({ request, response, next });
-});
+};
 
-// Regular Login
-router.post(`${loginContextPath}/failure`, (request, response, next) => {
+const handleLoginFailure = (
+    request: ControllerProps['request'],
+    response: ControllerProps['response'],
+    next: ControllerProps['next'],
+) => {
     logger.info(`POST ${loginContextPath}/failure`);
     return userController.loginFailure({ request, response, next });
-});
+};
+
+router
+    .route(`${loginContextPath}/success`)
+    .get(handleLoginSuccess)
+    .post(handleLoginSuccess);
+
+router
+    .route(`${loginContextPath}/failure`)
+    .get(handleLoginFailure)
+    .post(handleLoginFailure);
 
 router.post(logoutContextPath, isAuthenticated, (request, response, next) => {
     logger.info(`POST ${logoutContextPath}`);
@@ -46,11 +64,6 @@ router.post(`${logoutContextPath}/success`, (request, response, next) => {
 router.get(googleRootPath, (request, response, next) => {
     logger.info(`GET ${googleCallbackPath}`);
     return userController.googleLogin({ request, response, next });
-});
-
-router.get(googleCallbackPath, (_request, response, _next) => {
-    logger.info(`GET ${googleCallbackPath}`);
-    return response.status(200).json({ message: 'OK' });
 });
 
 export default router;
