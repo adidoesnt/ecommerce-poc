@@ -22,8 +22,6 @@ export const checkRequiredFields = (body: Request['body']) => {
         'firstName',
         'lastName',
         'email',
-        'areaCode',
-        'phone',
         'password',
     ];
 
@@ -50,8 +48,9 @@ export const addUser = async (body: Request['body']) => {
             ...rest,
             password: hashedPassword,
         } as User;
-        await userRepository.createOne(newUser);
+        const user = await userRepository.createOne(newUser);
         logger.info('Added user with data:', newUser);
+        return user;
     } catch (e) {
         const error = e as MongoError;
         const { code } = error;

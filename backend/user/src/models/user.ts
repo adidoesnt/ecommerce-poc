@@ -17,11 +17,11 @@ export class User {
     @prop({ required: true, unique: true, type: String })
     public email!: string;
 
-    @prop({ required: true, type: Number })
-    public areaCode!: number;
+    @prop({ required: false, type: Number })
+    public areaCode?: number;
 
-    @prop({ required: true, type: Number })
-    public phone!: number;
+    @prop({ required: false,type: Number })
+    public phone?: number;
 
     @prop({ required: true, type: String })
     public password!: string;

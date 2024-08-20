@@ -43,6 +43,10 @@
             "root": "/user",
             "login": "/login",
             "logout": "/logout"
+        },
+        "google": {
+            "root": "/auth/google",
+            "callback": "/auth/google/callback"
         }
     }
 }
