@@ -1,15 +1,7 @@
-# user
+# User Service
 
-To install dependencies:
+User service for the e-commerce application.
 
-```bash
-bun install
-```
+## To Dos
 
-To run:
-
-```bash
-bun run src/index.ts
-```
-
-This project was created using `bun init` in bun v1.1.8. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+[ ] Investigate missing req.user during google authentication
