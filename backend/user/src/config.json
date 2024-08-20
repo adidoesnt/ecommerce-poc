@@ -45,8 +45,7 @@
             "logout": "/logout"
         },
         "google": {
-            "root": "/auth/google",
-            "callback": "/auth/google/callback"
+            "root": "/auth/google"
         }
     }
 }
