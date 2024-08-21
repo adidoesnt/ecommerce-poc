@@ -3,4 +3,4 @@ export { setupBodyParser } from 'middleware/bodyParser';
 export { setupHelmet } from 'middleware/helmet';
 export { setupErrorHandler } from 'middleware/error';
 export { setupSession } from 'middleware/session';
-export { setupPassport, setupLocalAuthStrategy } from 'middleware/passport';
+export * from 'middleware/passport';

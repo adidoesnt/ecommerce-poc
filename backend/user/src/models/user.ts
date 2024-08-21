@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 export enum LoginType {
     LOCAL = 'local',
     GOOGLE = 'google',
+    FACEBOOK = 'facebook',
 }
 
 @index({ areaCode: 1, phone: 1 }, { unique: true })

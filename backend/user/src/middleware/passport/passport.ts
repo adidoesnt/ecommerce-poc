@@ -5,7 +5,7 @@ import type { Express, Request, Response, NextFunction } from 'express';
 import type { User } from 'models';
 import { RES } from 'controllers/types';
 import { setupGoogleAuthStrategy } from './google';
-import { setupLocalAuthStrategy } from 'middleware';
+import { setupFacebookAuthStrategy, setupLocalAuthStrategy } from 'middleware';
 
 const logger = new Logger({
     module: 'middleware/passport',
@@ -46,4 +46,5 @@ export const setupPassport = (app: Express) => {
 
     setupLocalAuthStrategy();
     setupGoogleAuthStrategy();
+    setupFacebookAuthStrategy();
 };

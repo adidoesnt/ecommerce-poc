@@ -58,6 +58,26 @@ export const googleLoginCallback = ({
     })(request, response, next);
 };
 
+export const facebookLogin = ({ request, response, next }: ControllerProps) => {
+    logger.info('Calling facebookLogin controller');
+    return passport.authenticate('facebook', {
+        scope: ['email'],
+    })(request, response, next);
+};
+
+export const facebookLoginCallback = ({
+    request,
+    response,
+    next,
+}: ControllerProps) => {
+    logger.info('Calling facebookLoginCallback controller');
+    const baseUrl = `${BASE_URL}${loginPath}`;
+    return passport.authenticate('facebook', {
+        successRedirect: `${baseUrl}/success`,
+        failureRedirect: `${baseUrl}/failure`,
+    })(request, response, next);
+};
+
 export const loginSuccess = async ({
     request,
     response,

@@ -47,6 +47,10 @@
         "google": {
             "auth": "/user/auth/google",
             "callback": "/user/auth/google/callback"
+        },
+        "facebook": {
+            "auth": "/user/auth/facebook",
+            "callback": "/user/auth/facebook/callback"
         }
     }
 }
