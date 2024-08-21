@@ -26,7 +26,8 @@ const handleLoginSuccess = (
     response: ControllerProps['response'],
     next: ControllerProps['next'],
 ) => {
-    logger.info(`POST ${loginContextPath}/success`);
+    const method = request.method.toUpperCase();
+    logger.info(`${method} ${loginContextPath}/success`);
     return userController.loginSuccess({ request, response, next });
 };
 
@@ -35,7 +36,8 @@ const handleLoginFailure = (
     response: ControllerProps['response'],
     next: ControllerProps['next'],
 ) => {
-    logger.info(`POST ${loginContextPath}/failure`);
+    const method = request.method.toUpperCase();
+    logger.info(`${method} ${loginContextPath}/failure`);
     return userController.loginFailure({ request, response, next });
 };
 

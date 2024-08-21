@@ -1,6 +1,5 @@
 import type { Request } from 'express';
 import { Logger } from 'utils';
-import { hash, compare } from 'bcryptjs';
 import { User } from 'models';
 import { userRepository } from 'repositories';
 import { ObjectId, type MongoError } from 'mongodb';
@@ -43,7 +42,10 @@ export const addUser = async (body: Request['body']) => {
             ...rest,
             password: censoredPassword,
         });
-        const hashedPassword = password ? hash(password, SALT_ROUNDS) : null;
+        const hashedPassword = await Bun.password.hash(password, {
+            algorithm: 'bcrypt',
+            cost: Number(SALT_ROUNDS),
+        });
         const newUser = {
             ...rest,
             password: hashedPassword,
@@ -89,7 +91,11 @@ export const findUserByEmail = async (email: string) => {
 
 export const checkPassword = async (password: string, user: User) => {
     try {
-        const isPasswordValid = await compare(password, user.password);
+        const isPasswordValid = await Bun.password.verify(
+            password,
+            user.password,
+            'bcrypt',
+        );
         return isPasswordValid;
     } catch (error) {
         logger.error('Error checking password:', error as Error);

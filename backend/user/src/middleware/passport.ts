@@ -3,9 +3,8 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Logger } from 'utils';
 import { userService } from 'services';
-import type { Express } from 'express';
+import type { Express, Request, Response, NextFunction } from 'express';
 import type { User } from 'models';
-import type { Request, Response, NextFunction } from 'express';
 import { RES } from 'controllers/types';
 import { contextPath } from 'config.json';
 
@@ -60,6 +59,7 @@ export const setupPassport = (app: Express) => {
 export const setupLocalAuthStrategy = () => {
     logger.info('Setting up local auth strategy');
     passport.use(
+        'local',
         new LocalStrategy(
             { usernameField: 'email', passwordField: 'password' },
             async (email, password, done) => {
@@ -92,6 +92,7 @@ export const setupLocalAuthStrategy = () => {
 export const setupGoogleAuthStrategy = () => {
     logger.info('Setting up Google auth strategy');
     passport.use(
+        'google',
         new GoogleStrategy(
             {
                 clientID: GOOGLE_CLIENT_ID,
