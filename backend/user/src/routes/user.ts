@@ -6,7 +6,8 @@ import { isAuthenticated } from 'middleware/passport';
 import { Logger } from 'utils';
 
 const { login: loginContextPath, logout: logoutContextPath } = contextPath.user;
-const { root: googleRootPath, callback: googleCallbackPath } = contextPath.google;
+const { root: googleRootPath, callback: googleCallbackPath } =
+    contextPath.google;
 
 const logger = new Logger({
     module: 'routes/user',
