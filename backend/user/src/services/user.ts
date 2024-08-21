@@ -24,7 +24,10 @@ export const checkRequiredFields = (body: Request['body']) => {
         'password',
     ];
 
-    const missingFields = requiredFields.filter((field) => !body[field]);
+    const missingFields = requiredFields.filter(
+        (field) => body[field] === undefined || body[field] === null,
+    );
+
     if (missingFields.length > 0) {
         const missingFieldsString = missingFields.join(', ');
         const message = `Missing required fields: ${missingFieldsString}`;
@@ -57,7 +60,6 @@ export const addUser = async (body: Request['body']) => {
         const error = e as MongoError;
         const { code } = error;
         logger.error('Error adding user:', error as Error);
-        console.log(error);
         throwControllerError(code as ErrorCode);
     }
 };
@@ -70,7 +72,6 @@ export const findUserById = async (id: string) => {
         const error = e as MongoError;
         const { code } = error;
         logger.error('Error finding user by id:', error as Error);
-        console.log(error);
         throwControllerError(code as ErrorCode);
     }
 };
@@ -84,7 +85,6 @@ export const findUserByEmail = async (email: string) => {
         const error = e as MongoError;
         const { code } = error;
         logger.error('Error finding user by email:', error as Error);
-        console.log(error);
         throwControllerError(code as ErrorCode);
     }
 };

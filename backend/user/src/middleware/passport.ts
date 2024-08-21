@@ -6,7 +6,7 @@ import { userService } from 'services';
 import type { Express, Request, Response, NextFunction } from 'express';
 import type { User } from 'models';
 import { RES } from 'controllers/types';
-import { contextPath } from 'config.json';
+import { contextPath, defaultPassword } from 'config.json';
 
 const {
     BASE_URL = 'http://localhost:3001',
@@ -109,11 +109,13 @@ export const setupGoogleAuthStrategy = () => {
                     if (!email || !firstName || !lastName)
                         throw new Error(ErrorMessage.INSUFFICIENT_PROFILE);
                     let user = await userService.findUserByEmail(email);
-                    if (!user) {
+                    if (user === null) {
                         user = await userService.addUser({
                             email,
                             firstName,
                             lastName,
+                            password: defaultPassword,
+                            requirePasswordChange: true,
                         });
                     }
                     return done(null, user);

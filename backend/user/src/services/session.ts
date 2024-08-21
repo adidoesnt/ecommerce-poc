@@ -13,10 +13,10 @@ const logger = new Logger({
 
 export const createSession = async (session: SessionCreateAttributes) => {
     try {
-        logger.info('Creating session with atrributes:', session);
+        logger.info('Creating session with attributes:', session);
         return await sessionRepository.createOne(session);
     } catch (error) {
-        console.log(error);
+        logger.error('Error creating session:', error as Error);
         throw error;
     }
 };
@@ -42,7 +42,7 @@ export const setupSession = async ({
             sessionService.deleteSessionById(session._id);
         }, jwtExpiryInMS);
     } catch (error) {
-        console.log(error);
+        logger.error('Error setting up session:', error as Error);
         throw error;
     }
 };
@@ -54,7 +54,7 @@ export const deleteSessionById = async (id: string | ObjectId) => {
             _id,
         });
     } catch (error) {
-        console.log(error);
+        logger.error('Error deleting session:', error as Error);
         throw error;
     }
 };
@@ -69,7 +69,7 @@ export const expireSessionByToken = async (token: string) => {
             },
         );
     } catch (error) {
-        console.log(error);
+        logger.error('Error expiring session:', error as Error);
         throw error;
     }
 };

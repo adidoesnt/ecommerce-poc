@@ -6,7 +6,12 @@ import passport from 'passport';
 import type { RequestWithUser } from 'middleware/types';
 import type { User } from 'models';
 
-const { login: loginContextPath, logout: logoutContextPath } = contextPath.user;
+const { BASE_URL = 'http://localhost:3001' } = process.env;
+const {
+    login: loginContextPath,
+    logout: logoutContextPath,
+    root: userContextPath,
+} = contextPath.user;
 
 const logger = new Logger({
     module: 'controllers/user',
@@ -37,11 +42,16 @@ export const googleLogin = ({ request, response, next }: ControllerProps) => {
     })(request, response, next);
 };
 
-export const googleLoginCallback = ({ request, response, next }: ControllerProps) => {
+export const googleLoginCallback = ({
+    request,
+    response,
+    next,
+}: ControllerProps) => {
     logger.info('Calling googleLoginCallback controller');
+    const baseUrl = `${BASE_URL}${userContextPath}${loginContextPath}`;
     return passport.authenticate('google', {
-        successRedirect: `.${loginContextPath}/success`,
-        failureRedirect: `.${loginContextPath}/failure`,
+        successRedirect: `${baseUrl}/success`,
+        failureRedirect: `${baseUrl}/failure`,
     })(request, response, next);
 };
 

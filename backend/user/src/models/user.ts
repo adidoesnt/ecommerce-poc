@@ -25,6 +25,18 @@ export class User {
 
     @prop({ required: true, type: String })
     public password!: string;
+
+    @prop({ required: true, default: false, type: Boolean })
+    public requirePasswordChange?: boolean;
+
+    @prop({ required: true, default: true, type: Boolean })
+    public requireEmailVerification?: boolean;
+
+    @prop({ required: true, default: false, type: Boolean })
+    public requirePhoneDetails?: boolean;
+
+    @prop({ required: true, default: true, type: Boolean })
+    public requirePhoneVerification?: boolean;
 }
 
 export const UserModel = getModelForClass(User);
