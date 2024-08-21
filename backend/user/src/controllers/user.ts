@@ -34,6 +34,12 @@ export const googleLogin = ({ request, response, next }: ControllerProps) => {
     logger.info('Calling googleLogin controller');
     return passport.authenticate('google', {
         scope: ['profile', 'email'],
+    })(request, response, next);
+};
+
+export const googleLoginCallback = ({ request, response, next }: ControllerProps) => {
+    logger.info('Calling googleLoginCallback controller');
+    return passport.authenticate('google', {
         successRedirect: `.${loginContextPath}/success`,
         failureRedirect: `.${loginContextPath}/failure`,
     })(request, response, next);
