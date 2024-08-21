@@ -7,7 +7,7 @@ export enum LoginType {
     FACEBOOK = 'facebook',
 }
 
-@index({ areaCode: 1, phone: 1 }, { unique: true })
+@index({ areaCode: 1, phone: 1 }, { unique: true, sparse: true })
 export class User {
     public _id!: ObjectId;
 
