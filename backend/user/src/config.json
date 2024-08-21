@@ -48,6 +48,5 @@
             "root": "/auth/google",
             "callback": "/auth/google/callback"
         }
-    },
-    "defaultPassword": "default-password"
+    }
 }

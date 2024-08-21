@@ -1,6 +1,11 @@
 import { prop, getModelForClass, index } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
 
+export enum LoginType {
+    LOCAL = 'local',
+    GOOGLE = 'google',
+}
+
 @index({ areaCode: 1, phone: 1 }, { unique: true })
 export class User {
     public _id!: ObjectId;
@@ -23,20 +28,16 @@ export class User {
     @prop({ required: false, type: Number })
     public phone?: number;
 
-    @prop({ required: true, type: String })
-    public password!: string;
+    @prop({
+        required: function (this: User) {
+            return this.loginType === LoginType.LOCAL;
+        },
+        type: String,
+    })
+    public password?: string;
 
-    @prop({ required: true, default: false, type: Boolean })
-    public requirePasswordChange?: boolean;
-
-    @prop({ required: true, default: true, type: Boolean })
-    public requireEmailVerification?: boolean;
-
-    @prop({ required: true, default: false, type: Boolean })
-    public requirePhoneDetails?: boolean;
-
-    @prop({ required: true, default: true, type: Boolean })
-    public requirePhoneVerification?: boolean;
+    @prop({ required: true, default: LoginType.LOCAL, type: String })
+    public loginType!: LoginType;
 }
 
 export const UserModel = getModelForClass(User);

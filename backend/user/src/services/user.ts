@@ -5,6 +5,7 @@ import { userRepository } from 'repositories';
 import { ObjectId, type MongoError } from 'mongodb';
 import { ControllerError, RES } from 'controllers/types';
 import { ErrorCode } from './types';
+import { LoginType } from 'models/user';
 
 const { SALT_ROUNDS = 10 } = process.env;
 
@@ -17,12 +18,11 @@ enum ErrorMessage {
 }
 
 export const checkRequiredFields = (body: Request['body']) => {
-    const requiredFields: (keyof User)[] = [
-        'firstName',
-        'lastName',
-        'email',
-        'password',
-    ];
+    const requiredFields: (keyof User)[] = ['firstName', 'lastName', 'email'];
+
+    if (!body.loginType) {
+        requiredFields.push('password');
+    }
 
     const missingFields = requiredFields.filter(
         (field) => body[field] === undefined || body[field] === null,
@@ -39,20 +39,19 @@ export const checkRequiredFields = (body: Request['body']) => {
 export const addUser = async (body: Request['body']) => {
     checkRequiredFields(body);
     try {
-        const { password, ...rest } = body;
-        const censoredPassword = password?.replace(/./g, '*');
-        logger.info('Adding user with data:', {
-            ...rest,
-            password: censoredPassword,
-        });
-        const hashedPassword = await Bun.password.hash(password, {
-            algorithm: 'bcrypt',
-            cost: Number(SALT_ROUNDS),
-        });
-        const newUser = {
-            ...rest,
-            password: hashedPassword,
-        } as User;
+        const { password, ...newUser } = body;
+        if (password) {
+            const censoredPassword = password?.replace(/./g, '*');
+            logger.info('Adding user with data:', {
+                ...newUser,
+                password: censoredPassword,
+            });
+            const hashedPassword = await Bun.password.hash(password, {
+                algorithm: 'bcrypt',
+                cost: Number(SALT_ROUNDS),
+            });
+            newUser.password = hashedPassword;
+        }
         const user = await userRepository.createOne(newUser);
         logger.info('Added user with data:', newUser);
         return user;
@@ -91,9 +90,14 @@ export const findUserByEmail = async (email: string) => {
 
 export const checkPassword = async (password: string, user: User) => {
     try {
+        const { loginType } = user;
+        if (loginType !== LoginType.LOCAL) {
+            logger.warn('Password not required for Google login');
+            return true;
+        }
         const isPasswordValid = await Bun.password.verify(
             password,
-            user.password,
+            user.password as string,
             'bcrypt',
         );
         return isPasswordValid;
