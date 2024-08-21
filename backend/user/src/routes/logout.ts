@@ -4,9 +4,7 @@ import { Router } from 'express';
 import { isAuthenticated } from 'middleware/passport';
 import { Logger } from 'utils';
 
-const {
-    logout: logoutPath,
-} = contextPath.user;
+const { logout: logoutPath } = contextPath.user;
 
 const logger = new Logger({
     module: 'routes/user',

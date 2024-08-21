@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { userController } from "controllers";
-import { contextPath } from "config.json";
-import { Logger } from "utils";
-import type { ControllerProps } from "controllers/types";
+import { Router } from 'express';
+import { userController } from 'controllers';
+import { contextPath } from 'config.json';
+import { Logger } from 'utils';
+import type { ControllerProps } from 'controllers/types';
 
 const { login: loginPath } = contextPath.user;
 

@@ -7,10 +7,7 @@ import type { RequestWithUser } from 'middleware/types';
 import type { User } from 'models';
 
 const { BASE_URL = 'http://localhost:3001' } = process.env;
-const {
-    login: loginPath,
-    logout: logoutPath,
-} = contextPath.user;
+const { login: loginPath, logout: logoutPath } = contextPath.user;
 
 const logger = new Logger({
     module: 'controllers/user',
