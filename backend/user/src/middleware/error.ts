@@ -1,5 +1,5 @@
 import { RES, type ControllerError } from 'controllers/types';
-import type { NextFunction, Request, Response } from 'express';
+import type { Express, NextFunction, Request, Response } from 'express';
 
 export const errorHandler = (
     error: Error,
@@ -11,4 +11,8 @@ export const errorHandler = (
     return response
         .status(status)
         .json({ message: error.message ?? RES.INTERNAL_SERVER_ERROR.message });
+};
+
+export const setupErrorHandler = (app: Express) => {
+    app.use(errorHandler);
 };

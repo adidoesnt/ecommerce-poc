@@ -8,9 +8,8 @@ import type { User } from 'models';
 
 const { BASE_URL = 'http://localhost:3001' } = process.env;
 const {
-    login: loginContextPath,
-    logout: logoutContextPath,
-    root: userContextPath,
+    login: loginPath,
+    logout: logoutPath,
 } = contextPath.user;
 
 const logger = new Logger({
@@ -29,11 +28,15 @@ export const signup = async ({ request, response, next }: ControllerProps) => {
     }
 };
 
-export const login = passport.authenticate('local', {
-    successRedirect: `.${loginContextPath}/success`,
-    failureRedirect: `.${loginContextPath}/failure`,
-    failureFlash: true,
-});
+export const login = ({ request, response, next }: ControllerProps) => {
+    logger.info('Calling login controller');
+    const baseUrl = `${BASE_URL}${loginPath}`;
+    return passport.authenticate('local', {
+        successRedirect: `${baseUrl}/success`,
+        failureRedirect: `${baseUrl}/failure`,
+        failureFlash: true,
+    })(request, response, next);
+};
 
 export const googleLogin = ({ request, response, next }: ControllerProps) => {
     logger.info('Calling googleLogin controller');
@@ -48,7 +51,7 @@ export const googleLoginCallback = ({
     next,
 }: ControllerProps) => {
     logger.info('Calling googleLoginCallback controller');
-    const baseUrl = `${BASE_URL}${userContextPath}${loginContextPath}`;
+    const baseUrl = `${BASE_URL}${loginPath}`;
     return passport.authenticate('google', {
         successRedirect: `${baseUrl}/success`,
         failureRedirect: `${baseUrl}/failure`,
@@ -93,9 +96,10 @@ export const logout = async ({ request, response }: ControllerProps) => {
             return response.status(status).json({ message });
         }
         try {
+            const baseUrl = `${BASE_URL}${logoutPath}`;
             const token = authUtils.getTokenFromRequest(request);
             await sessionService.expireSessionByToken(token);
-            return response.redirect(`.${logoutContextPath}/success`);
+            return response.redirect(`${baseUrl}/success`);
         } catch (error) {
             logger.error('Error logging out:', error as Error);
             return response.status(status).json({ message });

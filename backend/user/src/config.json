@@ -40,13 +40,13 @@
     },
     "contextPath": {
         "user": {
-            "root": "/user",
-            "login": "/login",
-            "logout": "/logout"
+            "signup": "/user/signup",
+            "login": "/user/login",
+            "logout": "/user/logout"
         },
         "google": {
-            "root": "/auth/google",
-            "callback": "/auth/google/callback"
+            "auth": "/user/auth/google",
+            "callback": "/user/auth/google/callback"
         }
     }
 }

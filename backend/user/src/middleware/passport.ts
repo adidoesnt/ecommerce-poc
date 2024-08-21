@@ -14,7 +14,6 @@ const {
     GOOGLE_CLIENT_ID = 'dummy-client-id',
     GOOGLE_CLIENT_SECRET = 'dummy-client-secret',
 } = process.env;
-const { root: userContextPath } = contextPath.user;
 const { callback: googleCallbackPath } = contextPath.google;
 
 const logger = new Logger({
@@ -99,7 +98,7 @@ export const setupGoogleAuthStrategy = () => {
             {
                 clientID: GOOGLE_CLIENT_ID,
                 clientSecret: GOOGLE_CLIENT_SECRET,
-                callbackURL: `${BASE_URL}${userContextPath}${googleCallbackPath}`,
+                callbackURL: `${BASE_URL}${googleCallbackPath}`,
             },
             async (_accessToken, _refreshToken, profile, done) => {
                 try {

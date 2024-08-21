@@ -1,8 +1,7 @@
-import { contextPath } from 'config.json';
 import express from 'express';
-import { healthRouter, userRouter } from 'routes';
+import { setupRoutes } from 'routes';
 import {
-    errorHandler,
+    setupErrorHandler,
     setupBodyParser,
     setupCors,
     setupHelmet,
@@ -24,11 +23,8 @@ setupBodyParser(app);
 setupHelmet(app);
 setupSession(app);
 setupPassport(app);
-
-app.use(healthRouter);
-app.use(contextPath.user.root, userRouter);
-
-app.use(errorHandler);
+setupRoutes(app);
+setupErrorHandler(app);
 
 app.listen(PORT, async () => {
     await database.connect();
