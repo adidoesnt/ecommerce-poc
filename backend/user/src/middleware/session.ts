@@ -5,6 +5,7 @@ import config from 'config.json';
 import MongoStore from 'connect-mongo';
 
 const {
+    NODE_ENV = 'DEV',
     SESSION_SECRET = 'dummy-secret',
     MONGODB_URI = 'dummy-uri',
     SESSION_COLLECTION_NAME = 'passport',
@@ -21,10 +22,12 @@ const sessionStore = new MongoStore({
 
 export const setupSession = (app: Express) => {
     logger.info('Setting up session middleware');
+    const secure = NODE_ENV !== 'DEV';
     const sessionOptions = {
         secret: SESSION_SECRET,
         ...config.session,
         store: sessionStore,
+        secure,
     };
     app.use(session(sessionOptions));
 };
