@@ -1,2 +1,2 @@
 export * as userRepository from 'repositories/user';
-export * as sessionRepository from 'repositories/session';
+export * as tokenRepository from 'repositories/token';

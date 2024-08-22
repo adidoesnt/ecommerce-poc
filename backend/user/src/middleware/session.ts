@@ -8,7 +8,7 @@ const {
     NODE_ENV = 'DEV',
     SESSION_SECRET = 'dummy-secret',
     MONGODB_URI = 'dummy-uri',
-    SESSION_COLLECTION_NAME = 'passport',
+    SESSION_COLLECTION_NAME = 'sessions',
 } = process.env;
 
 const logger = new Logger({

@@ -1,2 +1,2 @@
 export { User, UserModel } from 'models/user';
-export { Session, SessionModel } from 'models/session';
+export { Token, TokenModel } from 'models/token';

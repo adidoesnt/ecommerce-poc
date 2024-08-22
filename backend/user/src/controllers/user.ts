@@ -1,16 +1,14 @@
 import { contextPath } from 'config.json';
-import { sessionService, userService } from 'services';
+import { tokenService, userService } from 'services';
 import { RES, type ControllerProps } from './types';
 import { authUtils, Logger, tokenUtils } from 'utils';
 import passport from 'passport';
 import type { RequestWithUser } from 'middleware/types';
 import type { User } from 'models';
+import type { CustomRequest } from 'services/types';
 
 const { BASE_URL = 'http://localhost:3001' } = process.env;
-const {
-    login: loginPath,
-    logout: logoutPath,
-} = contextPath.user;
+const { login: loginPath, logout: logoutPath } = contextPath.user;
 
 const logger = new Logger({
     module: 'controllers/user',
@@ -68,7 +66,7 @@ export const loginSuccess = async ({
         const { status, message } = RES.OK;
         const { user } = request as RequestWithUser;
         const token = await tokenUtils.generateToken(user as User);
-        await sessionService.setupSession({
+        await tokenService.setupSession(request as CustomRequest, {
             userId: (user as User)._id,
             token,
         });
@@ -98,7 +96,7 @@ export const logout = async ({ request, response }: ControllerProps) => {
         try {
             const baseUrl = `${BASE_URL}${logoutPath}`;
             const token = authUtils.getTokenFromRequest(request);
-            await sessionService.expireSessionByToken(token);
+            await tokenService.expireSessionByToken(token);
             return response.redirect(`${baseUrl}/success`);
         } catch (error) {
             logger.error('Error logging out:', error as Error);

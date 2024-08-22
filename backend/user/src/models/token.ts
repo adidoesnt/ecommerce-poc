@@ -1,7 +1,7 @@
 import { prop, getModelForClass } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
 
-export class Session {
+export class Token {
     public _id!: ObjectId;
 
     @prop({ required: true, type: ObjectId })
@@ -14,6 +14,6 @@ export class Session {
     public expired?: boolean;
 }
 
-export const SessionModel = getModelForClass(Session);
+export const TokenModel = getModelForClass(Token);
 
-export type SessionCreateAttributes = Omit<Session, '_id'>;
+export type TokenCreateAttributes = Omit<Token, '_id'>;

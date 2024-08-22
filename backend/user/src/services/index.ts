@@ -1,2 +1,2 @@
 export * as userService from 'services/user';
-export * as sessionService from 'services/session';
+export * as tokenService from 'services/token';
