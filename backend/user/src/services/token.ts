@@ -3,14 +3,20 @@ import { ObjectId } from 'mongodb';
 import type { TokenCreateAttributes } from 'models/token';
 import { tokenService } from 'services';
 import { Logger } from 'utils';
-import type { CustomRequest } from './types';
+import type { CustomRequest, RequestSession } from './types';
 
-const { JWT_EXPIRY = 3600 } = process.env;
-const jwtExpiryInMS = Number(JWT_EXPIRY) * 1000;
+const { JWT_EXPIRY = 3600, RT_EXPIRY = 604800 } = process.env;
+const rtExpiryInMS = Number(RT_EXPIRY) * 1000;
 
 const logger = new Logger({
     module: 'services/session',
 });
+
+export type SetupSessionParameters = {
+    userId: ObjectId;
+    jwt: string;
+    rt: string;
+};
 
 export const createToken = async (token: TokenCreateAttributes) => {
     try {
@@ -22,34 +28,69 @@ export const createToken = async (token: TokenCreateAttributes) => {
     }
 };
 
+export const createTokens = async ({
+    userId,
+    jwt,
+    rt,
+}: SetupSessionParameters) => {
+    const jwtDocument = await createToken({
+        userId,
+        token: jwt,
+    });
+    const rtDocument = await createToken({
+        userId,
+        token: rt,
+    });
+    return {
+        jwtDocument,
+        rtDocument,
+    };
+};
+
 export const setupSession = async (
     request: CustomRequest,
-    { userId, token }: TokenCreateAttributes,
+    { userId, jwt, rt }: SetupSessionParameters,
 ) => {
     try {
         logger.info('Creating session with attributes:', {
             userId,
-            token,
+            jwt,
+            rt,
         });
-        const session = await tokenService.createToken({
+        const { jwtDocument, rtDocument } = await tokenService.createTokens({
             userId,
-            token,
+            jwt,
+            rt,
         });
-        request.session.token = session.token;
-        logger.info('Setting up session deletion expiry:', {
-            sessionId: session._id.toString(),
-            jwtExpiryInMS,
+        request.session.jwt = jwt;
+        request.session.rt = rt;
+        logger.info('Setting up token deletion upon expiry:', {
+            jwt: {
+                id: jwtDocument._id.toString(),
+                expiry: JWT_EXPIRY,
+            },
+            rt: {
+                id: rtDocument._id.toString(),
+                expiry: RT_EXPIRY,
+            },
         });
-        setTimeout(teardownSession.bind(null, request), jwtExpiryInMS);
+        setTimeout(teardownSession.bind(null, request), rtExpiryInMS);
     } catch (error) {
         logger.error('Error setting up session:', error as Error);
         throw error;
     }
 };
 
+export const deleteTokenSet = async (jwt: string, rt: string) => {
+    await tokenRepository.deleteOne({ token: jwt });
+    await tokenRepository.deleteOne({ token: rt });
+};
+
 export const teardownSession = async (request: CustomRequest) => {
     try {
         logger.info('Tearing down session');
+        const { jwt, rt } = request.session;
+        deleteTokenSet(jwt, rt);
         request.session.destroy((err) => {
             if (err) {
                 logger.error('Error destroying session:', err);
@@ -57,7 +98,6 @@ export const teardownSession = async (request: CustomRequest) => {
             }
             logger.info('Session destroyed');
         });
-        // TODO: clear sid cookie
     } catch (error) {
         logger.error('Error tearing down session:', error as Error);
         throw error;
@@ -76,15 +116,32 @@ export const deleteSessionById = async (id: string | ObjectId) => {
     }
 };
 
-export const expireSessionByToken = async (token: string) => {
-    try {
-        logger.info('Expiring session with token:', { token });
-        return await tokenRepository.updateOne(
-            { token },
+export const expireSessionTokens = async (jwt: string, rt: string) => {
+    await Promise.all([
+        await tokenRepository.updateOne(
+            { token: rt },
             {
-                expired: true,
+                isExpired: true,
             },
-        );
+        ),
+        await tokenRepository.updateOne(
+            { token: jwt },
+            {
+                isExpired: true,
+            },
+        ),
+    ]);
+};
+
+export const expireSession = async (session: RequestSession) => {
+    try {
+        const { jwt, rt, cookie } = session;
+        logger.info('Expiring session', {
+            jwt,
+            rt,
+            cookie,
+        });
+        await expireSessionTokens(jwt, rt);
     } catch (error) {
         logger.error('Error expiring session:', error as Error);
         throw error;

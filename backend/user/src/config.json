@@ -33,10 +33,7 @@
     },
     "session": {
         "resave": false,
-        "saveUninitialized": false,
-        "cookie": {
-            "maxAge": 604800000
-        }
+        "saveUninitialized": false
     },
     "contextPath": {
         "user": {

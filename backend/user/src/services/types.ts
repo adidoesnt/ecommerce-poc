@@ -5,7 +5,8 @@ export enum ErrorCode {
 }
 
 export type RequestSession = Request['session'] & {
-    token: string;
+    jwt: string;
+    rt: string;
 };
 
 export type CustomRequest = Omit<Request, 'session'> & {

@@ -11,7 +11,10 @@ export class Token {
     public token!: string;
 
     @prop({ required: false, type: Boolean, default: false })
-    public expired?: boolean;
+    public isRefreshToken?: boolean
+
+    @prop({ required: false, type: Boolean, default: false })
+    public isExpired?: boolean;
 }
 
 export const TokenModel = getModelForClass(Token);

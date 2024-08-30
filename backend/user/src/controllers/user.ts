@@ -5,7 +5,7 @@ import { authUtils, Logger, tokenUtils } from 'utils';
 import passport from 'passport';
 import type { RequestWithUser } from 'middleware/types';
 import type { User } from 'models';
-import type { CustomRequest } from 'services/types';
+import type { CustomRequest, RequestSession } from 'services/types';
 
 const { BASE_URL = 'http://localhost:3001' } = process.env;
 const { login: loginPath, logout: logoutPath } = contextPath.user;
@@ -65,12 +65,13 @@ export const loginSuccess = async ({
     try {
         const { status, message } = RES.OK;
         const { user } = request as RequestWithUser;
-        const token = await tokenUtils.generateToken(user as User);
+        const { jwt, rt } = await tokenUtils.generateTokenSet(user as User);
         await tokenService.setupSession(request as CustomRequest, {
             userId: (user as User)._id,
-            token,
+            jwt,
+            rt,
         });
-        return response.status(status).json({ message, token });
+        return response.status(status).json({ message, jwt, rt });
     } catch (error) {
         next(error);
     }
@@ -95,8 +96,7 @@ export const logout = async ({ request, response }: ControllerProps) => {
         }
         try {
             const baseUrl = `${BASE_URL}${logoutPath}`;
-            const token = authUtils.getTokenFromRequest(request);
-            await tokenService.expireSessionByToken(token);
+            await tokenService.expireSession(request.session as RequestSession);
             return response.redirect(`${baseUrl}/success`);
         } catch (error) {
             logger.error('Error logging out:', error as Error);
