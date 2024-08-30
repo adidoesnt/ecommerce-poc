@@ -45,5 +45,13 @@
             "auth": "/user/auth/google",
             "callback": "/user/auth/google/callback"
         }
+    },
+    "cookie": {
+        "rt": {
+            "name": "rt",
+            "httpOnly": true,
+            "secure": true,
+            "sameSite": "strict"
+        }
     }
 }

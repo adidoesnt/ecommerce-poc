@@ -6,6 +6,7 @@ import passport from 'passport';
 import type { RequestWithUser } from 'middleware/types';
 import type { User } from 'models';
 import type { CustomRequest, RequestSession } from 'services/types';
+import { cookieConfig } from './constants';
 
 const { BASE_URL = 'http://localhost:3001' } = process.env;
 const { login: loginPath, logout: logoutPath } = contextPath.user;
@@ -71,7 +72,10 @@ export const loginSuccess = async ({
             jwt,
             rt,
         });
-        return response.status(status).json({ message, jwt, rt });
+        return response
+            .cookie(cookieConfig.rt.name, rt, cookieConfig.rt)
+            .status(status)
+            .json({ message, jwt });
     } catch (error) {
         next(error);
     }
