@@ -16,7 +16,7 @@ const logger = new Logger({
     module: 'services/token',
 });
 
-export const createToken = async (token: TokenCreateAttributes) => {
+export const createTokenDocument = async (token: TokenCreateAttributes) => {
     try {
         logger.info('Creating token with attributes:', token);
         return await tokenRepository.createOne(token);
@@ -31,11 +31,11 @@ export const createTokenSetDocuments = async ({
     jwt,
     rt,
 }: SetupSessionParameters) => {
-    const jwtDocument = await createToken({
+    const jwtDocument = await createTokenDocument({
         userId,
         token: jwt,
     });
-    const rtDocument = await createToken({
+    const rtDocument = await createTokenDocument({
         userId,
         token: rt,
     });
@@ -98,18 +98,6 @@ export const teardownSession = async (request: CustomRequest) => {
         });
     } catch (error) {
         logger.error('Error tearing down session:', error as Error);
-        throw error;
-    }
-};
-
-export const deleteSessionById = async (id: string | ObjectId) => {
-    try {
-        let _id: ObjectId = typeof id === 'string' ? new ObjectId(id) : id;
-        return await tokenRepository.deleteOne({
-            _id,
-        });
-    } catch (error) {
-        logger.error('Error deleting session:', error as Error);
         throw error;
     }
 };
