@@ -3,20 +3,18 @@ import { ObjectId } from 'mongodb';
 import type { TokenCreateAttributes } from 'models/token';
 import { tokenService } from 'services';
 import { Logger } from 'utils';
-import type { CustomRequest, RequestSession } from './types';
+import type {
+    CustomRequest,
+    RequestSession,
+    SetupSessionParameters,
+} from './types';
 
 const { JWT_EXPIRY = 3600, RT_EXPIRY = 604800 } = process.env;
 const rtExpiryInMS = Number(RT_EXPIRY) * 1000;
 
 const logger = new Logger({
-    module: 'services/session',
+    module: 'services/token',
 });
-
-export type SetupSessionParameters = {
-    userId: ObjectId;
-    jwt: string;
-    rt: string;
-};
 
 export const createToken = async (token: TokenCreateAttributes) => {
     try {
@@ -28,7 +26,7 @@ export const createToken = async (token: TokenCreateAttributes) => {
     }
 };
 
-export const createTokens = async ({
+export const createTokenSetDocuments = async ({
     userId,
     jwt,
     rt,
@@ -57,7 +55,7 @@ export const setupSession = async (
             jwt,
             rt,
         });
-        const { jwtDocument, rtDocument } = await tokenService.createTokens({
+        const { jwtDocument, rtDocument } = await tokenService.createTokenSetDocuments({
             userId,
             jwt,
             rt,
@@ -81,7 +79,7 @@ export const setupSession = async (
     }
 };
 
-export const deleteTokenSet = async (jwt: string, rt: string) => {
+export const deleteTokenSetDocuments = async (jwt: string, rt: string) => {
     await tokenRepository.deleteOne({ token: jwt });
     await tokenRepository.deleteOne({ token: rt });
 };
@@ -90,7 +88,7 @@ export const teardownSession = async (request: CustomRequest) => {
     try {
         logger.info('Tearing down session');
         const { jwt, rt } = request.session;
-        deleteTokenSet(jwt, rt);
+        deleteTokenSetDocuments(jwt, rt);
         request.session.destroy((err) => {
             if (err) {
                 logger.error('Error destroying session:', err);
